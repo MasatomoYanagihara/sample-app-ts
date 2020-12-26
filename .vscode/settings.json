@@ -43,7 +43,10 @@
   ],
 
   // Code Spell Checker の設定
-  "cSpell.words": ["vuex"],
+  "cSpell.words": [
+    "stylelint",
+    "vuex"
+  ],
   "cSpell.enableFiletypes": [
     "css",
     "html",
