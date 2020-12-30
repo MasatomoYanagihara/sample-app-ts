@@ -1,6 +1,6 @@
 interface CalendarEventDetailBase {
   id: string;
-  userID: string;
+  userId: string;
   name: string;
   memo: string | null;
   shared: boolean;

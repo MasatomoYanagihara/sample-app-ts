@@ -1,6 +1,7 @@
-import { SharedUser } from '@/store/shared-user.model';
+import '@/plugins/composition-api';
+import { reactive } from '@vue/composition-api';
 
-export const sharedUserMockData: SharedUser[] = [
+export const sharedUserMockData = [
   {
     userId: '66006b29-727e-4ed8-a3c8-95d4438f66d4',
     userName: 'naminami',
@@ -34,3 +35,25 @@ export const sharedUserMockData: SharedUser[] = [
     display: true,
   },
 ];
+
+export const sharedUserStore = reactive({ sharedUsers: sharedUserMockData });
+
+/**
+ * 特定ユーザーのプロフィールを更新します。
+ * @param profile 更新対象ユーザーのプロフィール
+ */
+export const update = profile => {
+  const filteredUser = sharedUserStore.sharedUsers.filter(
+    user => user.userId === profile.userId,
+  );
+
+  if (!filteredUser || filteredUser.length === 0) {
+    return;
+  }
+
+  const targetUser = filteredUser[0];
+  targetUser.userName = profile.userName;
+  targetUser.nickname = profile.nickname;
+  targetUser.themeColor = profile.themeColor;
+  targetUser.hasAvatar = profile.hasAvatar;
+};
