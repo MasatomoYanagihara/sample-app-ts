@@ -1,5 +1,7 @@
 import '@/plugins/composition-api';
 import { reactive } from '@vue/composition-api';
+import { SharedUser } from '@/store/shared-user.model';
+import { Profile } from '@/store/profile.model';
 
 export const sharedUserMockData = [
   {
@@ -36,7 +38,9 @@ export const sharedUserMockData = [
   },
 ];
 
-export const sharedUserStore = reactive({ sharedUsers: sharedUserMockData });
+export const sharedUserStore = reactive({
+  sharedUsers: sharedUserMockData,
+});
 
 /**
  * 特定ユーザーのプロフィールを更新します。
@@ -56,4 +60,14 @@ export const update = profile => {
   targetUser.nickname = profile.nickname;
   targetUser.themeColor = profile.themeColor;
   targetUser.hasAvatar = profile.hasAvatar;
+};
+
+/**
+ * 指定したニックネームの一部に前方一致するユーザーを検索します。
+ * @param partOfNickname 前方一致で検索するユーザーのニックネームの一部
+ */
+export const searchUsers = (partOfNickname: string) => {
+  return sharedUserStore.sharedUsers.filter(user =>
+    user.nickname.startsWith(partOfNickname),
+  );
 };
