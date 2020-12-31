@@ -285,6 +285,7 @@ import {
   computed,
   nextTick,
   toRefs,
+  onUpdated,
 } from '@vue/composition-api';
 import { CalendarTimestamp, CalendarEvent } from 'vuetify';
 import {
@@ -400,6 +401,20 @@ export default defineComponent({
       disabledEndTime: computed((): boolean => {
         return !state.endDate || !state.startTime;
       }),
+    });
+
+    /**
+     * `onUpdated`ライフサイクルフックです。
+     */
+    onUpdated(() => {
+      // 月単位の場合は時刻がないので何もしない
+      if (props.type === 'month') {
+        return;
+      }
+      nextTick(() => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        state.calendar!.scrollToTime('07:00');
+      });
     });
 
     const methods = {
