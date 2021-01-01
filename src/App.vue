@@ -6,7 +6,7 @@
           <router-view />
         </v-container>
       </v-content>
-      <Footer />
+      <Footer-Component />
     </v-container>
   </v-app>
 </template>
@@ -17,7 +17,7 @@ import FooterComponent from '@/components/Footer.vue';
 
 export default defineComponent({
   components: {
-    Footer: FooterComponent,
+    FooterComponent,
   },
 });
 </script>
