@@ -8,8 +8,13 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css';
 import '@/plugins/composition-api';
 import '@/plugins/vee-validate';
 import '@/plugins/axios';
+import * as components from '@/components';
 
 Vue.config.productionTip = false;
+
+for (const [key, component] of Object.entries(components)) {
+  Vue.component(key, component);
+}
 
 new Vue({
   router,

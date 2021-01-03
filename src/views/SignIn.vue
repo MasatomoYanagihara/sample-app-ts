@@ -1,6 +1,12 @@
 <template>
   <v-row align="center" justify="center">
     <v-col cols="12" md="6" class="text-center">
+      <my-example
+        v-model="parentValue"
+        counter="10"
+        clearable
+        @custom-event="customEventHandler"
+      />
       <p class="display-1 py-12">
         サンプルアプリケーションにサインインする
       </p>
@@ -42,14 +48,24 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import {
+  defineComponent,
+  reactive,
+  toRefs,
+  onMounted,
+} from '@vue/composition-api';
 import { profileStore } from '@/store/profile/profile';
+import { MyExampleComponentParameter } from '@/components/MyExample.vue';
 
 export default defineComponent({
   setup(prop, context) {
-    /**
-     * サインインします。
-     */
+    const state = reactive({
+      parentValue: {
+        foo: 'foo',
+        bar: 'bar',
+      } as MyExampleComponentParameter,
+    });
+
     const signIn = async () => {
       try {
         await profileStore.signInAsync();
@@ -59,8 +75,14 @@ export default defineComponent({
       }
     };
 
+    const customEventHandler = value => {
+      console.log('value ', value);
+    };
+
     return {
+      ...toRefs(state),
       signIn,
+      customEventHandler,
     };
   },
 });

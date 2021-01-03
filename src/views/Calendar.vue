@@ -321,50 +321,26 @@ export default defineComponent({
   },
   setup(props, context) {
     const state = reactive({
-      // カレンダーコンポーネントの参照
       calendar: null as VCalendar | null,
-      // カレンダーの表示範囲（開始日付）です。
       start: null as CalendarTimestamp | null,
-      // カレンダーの表示範囲（終了日付）です。
       end: null as CalendarTimestamp | null,
-      // カレンダーを描画するかどうかを示す値です。
       visible: true,
-      // カレンダー上でフォーカスする日付です。
       focus: '',
-      // 本日の日付です。
       today: parseDate(new Date()).date,
-      // カレンダーを共有しているユーザーです。
       sharedUsers: sharedUserStore.sharedUsers,
-      // イベントメニューを表示するかどうかを示す値です。
       isOpenEventMenu: false,
-      /**
-       * イベントメニューをアクティブにする要素です。
-       * 詳細は`v-menu`コンポーネントのドキュメントを参照してください。
-       */
       menuActivatorElement: null as HTMLElement | null,
-      // 選択したイベントです。
       selectedEvent: null as CalendarEvent | null,
-      // イベント登録/編集ダイアログを表示するかどうかを示す値です。
       isOpenEventDialog: false,
-      // 登録/更新対象の新しいイベントの情報です。
       newEvent: null as NewCalendarEvent | null,
-      // イベント開始日付を選択する`v-date-picker`を表示するかどうかを示す値です。
       isOpenStartDatePicker: false,
-      // `v-date-picker`コンポーネントで選択したイベント開始日付です。
       startDate: null as string | null,
-      // イベント開始時刻を選択する`v-time-picker`コンポーネントを表示するかどうかを示す値です。
       isOpenStartTimePicker: false,
-      // `v-time-picker`コンポーネントで選択したイベント開始時刻です。
       startTime: null as string | null,
-      // イベント終了日付を選択する`v-date-picker`コンポーネントを表示するかどうかを示す値です。
       isOpenEndDatePicker: false,
-      // `v-date-picker`コンポーネントで選択したイベント終了日付です。
       endDate: null as string | null,
-      // イベント終了時刻を選択する`v-time-picker`コンポーネントを表示するかどうかを示す値です。
       isOpenEndTimePicker: false,
-      // `v-time-picker`コンポーネントで選択したイベント終了時刻です。
       endTime: null as string | null,
-      // カレンダー上部に表示する日付を取得します。
       title: computed((): string => {
         if (!state.start || !state.end) {
           return '';
@@ -378,10 +354,7 @@ export default defineComponent({
 
         return `${state.start.year}年 ${state.start.month}月`;
       }),
-      /**
-       * カレンダーに表示するイベントです。
-       * スイッチによってフィルタリングを行います。
-       */
+
       filteredEvents: computed((): CalendarEventDetail[] => {
         const displayUserIds = state.sharedUsers
           .filter(user => user.display)
@@ -391,21 +364,18 @@ export default defineComponent({
           displayUserIds.includes(event.userId),
         );
       }),
-      // 終了時刻を表示用にフォーマットします。
+
       formatEndDateTime: computed((): string => {
         return !state.selectedEvent || !state.selectedEvent.end
           ? ''
           : `終了: ${state.selectedEvent.end}`;
       }),
-      // イベント終了時刻の入力を無効にするかどうかを判定します。
+
       disabledEndTime: computed((): boolean => {
         return !state.endDate || !state.startTime;
       }),
     });
 
-    /**
-     * `onUpdated`ライフサイクルフックです。
-     */
     onUpdated(() => {
       // 月単位の場合は時刻がないので何もしない
       if (props.type === 'month') {
@@ -418,21 +388,17 @@ export default defineComponent({
     });
 
     const methods = {
-      // カレンダーを本日の日付に移動します。
       setToday: () => {
         state.focus = state.today;
       },
-      // カレンダーを1つ前に戻します。
       prev: () => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         state.calendar!.prev();
       },
-      // カレンダーを1つ先に進めます。
       next: () => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         state.calendar!.next();
       },
-      // イベントの色を取得します。
       getEventColor: (event: CalendarEvent) => {
         if (!event) {
           return;
@@ -440,15 +406,12 @@ export default defineComponent({
 
         return getThemeColor(event.userId);
       },
-      // カレンダーに表示する日のフォーマットを行います。
       formatDay: (timestamp: CalendarTimestamp) => {
         return new Date(timestamp.date).getDate();
       },
-      // カレンダーに表示する月のフォーマットを行います。
       formatMonth: (timestamp: CalendarTimestamp) => {
         return `${new Date(timestamp.date).getMonth() + 1} /`;
       },
-      // イベント詳細を表示します。
       showEvent: ({
         nativeEvent,
         event,
@@ -476,12 +439,10 @@ export default defineComponent({
         // クリックイベントの伝搬を抑止します。
         nativeEvent.stopPropagation();
       },
-      // カレンダー（日）を表示します。
       viewDay: ({ date }: { date: string }) => {
         state.focus = date;
         context.root.$router.push('/calendar/day');
       },
-      // イベントの新規登録を開始します。
       startAddEvent: ({ date }: { date: string }) => {
         state.newEvent = {
           id: null,
@@ -500,10 +461,6 @@ export default defineComponent({
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         event!.stopPropagation();
       },
-      /**
-       * カレンダー上部の年月を表示するために使用する、表示範囲を更新します。
-       * カレンダーが描画されたタイミング、または表示範囲が変更されたタイミングで呼び出されます。
-       */
       updateRange: ({
         start,
         end,
@@ -514,7 +471,6 @@ export default defineComponent({
         state.start = start;
         state.end = end;
       },
-      // 自分のイベントではないことを判定します。
       isNotOwner: (userId: string) => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         return userId !== profileStore.profile!.userId;
@@ -539,29 +495,24 @@ export default defineComponent({
         state.isOpenEventMenu = false;
         state.isOpenEventDialog = true;
       },
-      // イベント日付選択ダイアログに表示する日のフォーマットを行います。
       formatDayForDatePicker: (date: string) => {
         return new Date(date).getDate();
       },
-      // イベント開始日付選択ダイアログを閉じます。
       closeStartDatePicker: () => {
         state.isOpenStartDatePicker = false;
       },
-      // 日付/時刻選択ダイアログにバインドしている値を初期化します。
       clearPickerBindValue: () => {
         state.startDate = null;
         state.startTime = null;
         state.endDate = null;
         state.endTime = null;
       },
-      // カレンダーを再描画します。
       refresh: () => {
         state.visible = false;
         nextTick(() => {
           state.visible = true;
         });
       },
-      // イベントの変更内容を保存します。
       save: () => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const newEvent = state.newEvent!;
@@ -587,35 +538,28 @@ export default defineComponent({
         state.isOpenEventDialog = false;
         methods.refresh();
       },
-      // イベント開始時刻の値をクリアします。
       clearStartTime: () => {
         state.startTime = null;
         // イベント終了時刻のみの入力はできないため、イベント終了時刻もクリアする。
         state.endTime = null;
       },
-      // イベント開始時刻選択ダイアログを閉じます。
       closeStartTimePicker: () => {
         state.isOpenStartTimePicker = false;
       },
-      // イベント終了日付の値をクリアします。
       clearEndDate: () => {
         state.endTime = null;
         // イベント終了時刻もクリアする。
         state.endTime = null;
       },
-      // イベント終了日付選択ダイアログを閉じます。
       closeEndDatePicker: () => {
         state.isOpenEndDatePicker = false;
       },
-      // イベント終了時刻の値をクリアします。
       clearEndTime: () => {
         state.endTime = null;
       },
-      // イベント終了時刻選択ダイアログを閉じます。
       closeEndTimePicker: () => {
         state.isOpenEndTimePicker = false;
       },
-      // イベント登録/編集ダイアログを閉じます。
       closeEventDialog: () => {
         methods.clearPickerBindValue();
         state.isOpenEventDialog = false;
