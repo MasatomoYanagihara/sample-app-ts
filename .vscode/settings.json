@@ -45,12 +45,16 @@
   // Code Spell Checker の設定
   "cSpell.words": [
     "fontface",
+    "fune",
+    "katuo",
     "naminami",
     "roboto",
     "scripthost",
+    "scrollable",
     "stylelint",
     "vuetify",
-    "vuex"
+    "vuex",
+    "wakame"
   ],
   "cSpell.enableFiletypes": [
     "css",
